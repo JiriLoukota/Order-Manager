@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 public class Dish {
     private String title, image;
     private BigDecimal price;
-    private int preparationTime;//in minutes
+    private int noInCookBook, preparationTime;//in minutes
 
-    public Dish(String title, String image, BigDecimal price, int preparationTime) throws InvalidDataException {
+    public Dish(String title, BigDecimal price, int preparationTime, String image) throws InvalidDataException {
         this.title = title;
         this.image = image;
         setPrice(price);
@@ -17,7 +17,7 @@ public class Dish {
     }
 
     public Dish(String title, BigDecimal price, int preparationTime) throws InvalidDataException {
-        this(title, "blank", price, preparationTime);
+        this(title, price, preparationTime, "blank");
     }
     //region Getters and setters
 
@@ -55,5 +55,21 @@ public class Dish {
         else throw new InvalidDataException(getClass() + "; value should be higher than zero.");
     }
 
+    public int getNoInCookBook() {
+        return noInCookBook;
+    }
+
+    public void setNoInCookBook(int noInCookBook) {
+        this.noInCookBook = noInCookBook;
+    }
+
     //endregion
+    public String toSavingFormat(){
+        return title + "\t" + price + "\t" + preparationTime + "\t" + image;
+    }
+    @Override
+    public String toString(){
+        return"Dish: title: " + this.title + "; price: " + this.price.toString() + Settings.currency + "; preparation time: " +
+                this.preparationTime + " minutes; image: " + image;
+    }
 }
