@@ -7,14 +7,12 @@ import orderManager.exceptions.InvalidDataException;
 import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Scanner;
 
 public class EvidenceManager {
-    private static List<Order> orderList;
     public static void saveEvidence() throws FileSavingException {
         //saving orders
-        try(PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(Settings.ordersFilePath)))){
+        try(PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(Settings.ordersFilePath, false)))){
             for(Order order : OrderManager.getOrderList()){
                 String line = order.toSavingFormat();
                 printWriter.println(line);
@@ -24,7 +22,7 @@ public class EvidenceManager {
                     e.getLocalizedMessage());
         }
         //saving dishes
-        try(PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(Settings.cookBookFilePath)))){
+        try(PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(Settings.cookBookFilePath, false)))){
             for(Dish dish : CookBook.getCookBook()){
                 String line = dish.toSavingFormat();
                 printWriter.println(line);
@@ -56,9 +54,11 @@ public class EvidenceManager {
             while(scanner.hasNextLine()){
                 String line = scanner.nextLine();
                 String[] parts = line.split("\t");
+                LocalDateTime fullfilmentTime = null;
+                    fullfilmentTime = LocalDateTime.parse(parts[4], Settings.formatter);
                 Order order = new Order(CookBook.getDish(Integer.parseInt(parts[0])), Integer.parseInt(parts[1]),
                         Integer.parseInt(parts[2]), LocalDateTime.parse(parts[3], Settings.formatter),
-                        LocalDateTime.parse(parts[4], Settings.formatter), parts[5].equals("true"));
+                        fullfilmentTime, parts[5].equals("true"));
             }
         } catch (FileNotFoundException e) {
             throw new FileLoadingException(Settings.ordersFilePath + "(error in class EvidenceManager while loading orders)" +

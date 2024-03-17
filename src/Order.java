@@ -52,6 +52,7 @@ public class Order {
     }
 
     public LocalDateTime getFulfilmentTime() {
+        if (fulfilmentTime==null) return null;
         return fulfilmentTime;
     }
 
@@ -83,8 +84,10 @@ public class Order {
     }
 
     public String toSavingFormat(){
+        String fulfilment = "";
+        if(fulfilmentTime!=null) fulfilment = fulfilmentTime.format(Settings.formatter);
         return dish.getNoInCookBook() + "\t" + tableNo + "\t" +amount + "\t" + orderedTime.format(Settings.formatter)
-                + "\t" +fulfilmentTime.format(Settings.formatter) + "\t" +paid;
+                + "\t" +fulfilment + "\t" +paid;
     }
     @Override
     public String toString(){
